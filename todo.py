@@ -8,22 +8,29 @@ class Controller:
             self.print_usage()
         elif argv[1] == "-l":
             self.list_tasks()
+        elif argv[1] == "-lu":
+            self.list_tasks()
+        elif argv[1] == "-ld":
+            self.list_tasks()
         elif argv[1] == "-a":
             self.new_task()
         elif argv[1] == "-r":
             self.remove_task()
         elif argv[1] == "-c":
             self.complete_task()
-        elif argv[1] != "-l" and argv[1] != "-a" and argv[1] != "-r" and argv[1] != "-c":
+        else:
             print("\nUnsupported argument")
             self.print_usage()
 
     def print_usage(self):
-        print("\nCommand Line Todo Application\n""=============================\n\n""Command Line arguments:")
-        print("-l Lists all the tasks")
-        print("-a Add a new task")
-        print("-r Removes a task")
-        print("-c Completes a task")
+        print("\n|===============================|")
+        print("| Command Line Todo Application |\n""|===============================|\n \n""  Command Line arguments:")
+        print("  -l Lists all the tasks")
+        print("  -lu Lists all the undone tasks")
+        print("  -ld Lists all the done tasks")
+        print("  -a Add a new task")
+        print("  -r Removes a task")
+        print("  -c Completes a task")
 
     def list_tasks(self):
         tasks = open('todo.txt', "r")
@@ -31,7 +38,12 @@ class Controller:
         if len(line) == 0:
             print("No todos for today! :)")
         for i in range(len(line)):
-            print(str(i + 1) + " - " + line[i], sep="", end="")
+            if argv[1] == "-lu" and line[i][0:3] == "[ ]":
+                print(str(i + 1) + " - " + line[i], sep="", end="")
+            elif argv[1] == "-ld" and line[i][0:3] == "[x]":
+                print(str(i + 1) + " - " + line[i], sep="", end="")
+            elif argv[1] == "-l":
+                print(str(i + 1) + " - " + line[i], sep="", end="")
         tasks.close()
 
     def new_task(self):
