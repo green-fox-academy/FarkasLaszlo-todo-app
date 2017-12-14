@@ -2,8 +2,8 @@ from sys import argv
 
 
 class Controller:
-    def __init__(self):
-        self.checked = "[ ]"
+    def __init__(self, name):
+        self.name = name
         if len(argv) == 1:
             self.print_usage()
         elif argv[1] == "-l":
@@ -33,7 +33,7 @@ class Controller:
         print("  -c Completes a task")
 
     def list_tasks(self):
-        tasks = open('todo.txt', "r")
+        tasks = open(self.name, "r")
         line = tasks.readlines()
         if len(line) == 0:
             print("No todos for today! :)")
@@ -48,7 +48,7 @@ class Controller:
 
     def new_task(self):
         try:
-            tasks = open('todo.txt', "a")
+            tasks = open(self.name, "a")
             tasks.write("[ ] " + argv[2] + "\n")
             tasks.close()
         except IndexError:
@@ -57,12 +57,12 @@ class Controller:
     def remove_task(self):
         try:
             del_line = argv[2]
-            tasks = open('todo.txt', "r")
+            tasks = open(self.name, "r")
             line = tasks.readlines()
             if int(argv[2]) > len(line):
                 return print("Unable to remove: index is out of bound")
             del line[int(del_line) - 1]
-            tasks = open('todo.txt', "w")
+            tasks = open(self.name, "w")
             for i in range(len(line)):
                 tasks.write(line[i])
             tasks.close()
@@ -73,13 +73,13 @@ class Controller:
 
     def complete_task(self):
         try:
-            tasks = open("todo.txt", "r")
+            tasks = open(self.name, "r")
             line = tasks.readlines()
             complete = int(argv[2]) - 1
             tasks.close()
             if int(argv[2]) > len(line):
                 return print("Unable to check: index is out of bound")
-            tasks = open("todo.txt", "w")
+            tasks = open(self.name, "w")
             for i in range(len(line)):
                 if line[i][0:3] == "[ ]" and i == complete:
                     tasks.write("[x]" + line[i][3:])
@@ -92,4 +92,4 @@ class Controller:
             return print("Unable to check: index is not a number")
 
 
-screen = Controller()
+screen = Controller('todo.txt')
