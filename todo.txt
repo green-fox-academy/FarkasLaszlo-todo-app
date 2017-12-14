@@ -1,0 +1,3 @@
+[x] A new task
+[x] A newer task
+[ ] Another task
