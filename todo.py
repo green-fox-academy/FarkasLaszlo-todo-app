@@ -33,6 +33,7 @@ class Controller:
         print("  -a Add a new task")
         print("  -r Removes a task")
         print("  -c Completes a task")
+        print("  -uc Uncompletes a task")
 
     def list_tasks(self):
         line = self.read()
