@@ -18,6 +18,8 @@ class Controller:
             self.remove_task()
         elif argv[1] == "-c":
             self.complete_task()
+        elif argv[1] == "-uc":
+            self.complete_task()
         else:
             print("\nUnsupported argument")
             self.print_usage()
@@ -86,8 +88,10 @@ class Controller:
                 return print("Unable to check: index is out of bound")
             tasks = open(self.name, "w")
             for i in range(len(line)):
-                if line[i][0:3] == "[ ]" and i == complete:
+                if line[i][0:3] == "[ ]" and i == complete and argv[1] == "-c":
                     tasks.write("[x]" + line[i][3:])
+                elif line[i][0:3] == "[x]" and i == complete and argv[1] == "-uc":
+                    tasks.write("[ ]" + line[i][3:])
                 else:
                     tasks.write(line[i])
             tasks.close()
@@ -101,8 +105,6 @@ class Controller:
         line = tasks.readlines()
         tasks.close()
         return line
-
-
 
 
 screen = Controller('todo.txt')
