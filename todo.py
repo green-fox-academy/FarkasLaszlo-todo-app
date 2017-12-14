@@ -36,26 +36,29 @@ class Controller:
         print("  -uc Uncompletes a task")
 
     def list_tasks(self):
-        line = self.read()
-        if len(line) == 0:
-            print("No todos for today! :)")
-            return
-        max_length = 0
-        for i in range(len(line)):
-            if len(line[i]) > max_length:
-                max_length = len(line[i])
-        max_length += 6
-        print("=" * max_length)
-        for i in range(len(line)):
-            if argv[1] == "-lu" and line[i][0:3] == "[ ]":
-                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                print("=" * max_length)
-            elif argv[1] == "-ld" and line[i][0:3] == "[x]":
-                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                print("=" * max_length)
-            elif argv[1] == "-l":
-                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                print("=" * max_length)
+        try:
+            line = self.read()
+            if len(line) == 0:
+                print("No todos for today! :)")
+                return
+            max_length = 0
+            for i in range(len(line)):
+                if len(line[i]) > max_length:
+                    max_length = len(line[i])
+            max_length += 6
+            print("=" * max_length)
+            for i in range(len(line)):
+                if argv[1] == "-lu" and line[i][0:3] == "[ ]":
+                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                    print("=" * max_length)
+                elif argv[1] == "-ld" and line[i][0:3] == "[x]":
+                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                    print("=" * max_length)
+                elif argv[1] == "-l":
+                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                    print("=" * max_length)
+        except TypeError:
+            self.read()
 
     def new_task(self):
         try:
@@ -102,10 +105,15 @@ class Controller:
             return print("Unable to check: index is not a number")
 
     def read(self):
-        tasks = open(self.name, "r")
-        line = tasks.readlines()
-        tasks.close()
-        return line
+        try:
+            tasks = open(self.name, "r")
+            line = tasks.readlines()
+            tasks.close()
+            return line
+        except FileNotFoundError:
+            tasks = open(self.name, "w")
+            print("File didn't exist, now it is.")
+            tasks.close()
 
 
 screen = Controller('todo.txt')
