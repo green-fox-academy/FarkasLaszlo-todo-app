@@ -23,8 +23,8 @@ class Controller:
             self.print_usage()
 
     def print_usage(self):
-        print("\n|===============================|")
-        print("| Command Line Todo Application |\n""|===============================|\n \n""  Command Line arguments:")
+        print("\n|================================|")
+        print("| Command Line Todo Application  |\n|================================|\n \n  Command Line arguments:")
         print("  -l Lists all the tasks")
         print("  -lu Lists all the undone tasks")
         print("  -ld Lists all the done tasks")
@@ -33,18 +33,26 @@ class Controller:
         print("  -c Completes a task")
 
     def list_tasks(self):
-        tasks = open(self.name, "r")
-        line = tasks.readlines()
+        line = self.read()
         if len(line) == 0:
             print("No todos for today! :)")
+            return
+        max_length = 0
+        for i in range(len(line)):
+            if len(line[i]) > max_length:
+                max_length = len(line[i])
+        max_length += 6
+        print("=" * max_length)
         for i in range(len(line)):
             if argv[1] == "-lu" and line[i][0:3] == "[ ]":
-                print(str(i + 1) + " - " + line[i], sep="", end="")
+                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                print("=" * max_length)
             elif argv[1] == "-ld" and line[i][0:3] == "[x]":
-                print(str(i + 1) + " - " + line[i], sep="", end="")
+                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                print("=" * max_length)
             elif argv[1] == "-l":
-                print(str(i + 1) + " - " + line[i], sep="", end="")
-        tasks.close()
+                print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+                print("=" * max_length)
 
     def new_task(self):
         try:
@@ -57,8 +65,7 @@ class Controller:
     def remove_task(self):
         try:
             del_line = argv[2]
-            tasks = open(self.name, "r")
-            line = tasks.readlines()
+            line = self.read()
             if int(argv[2]) > len(line):
                 return print("Unable to remove: index is out of bound")
             del line[int(del_line) - 1]
@@ -73,10 +80,8 @@ class Controller:
 
     def complete_task(self):
         try:
-            tasks = open(self.name, "r")
-            line = tasks.readlines()
+            line = self.read()
             complete = int(argv[2]) - 1
-            tasks.close()
             if int(argv[2]) > len(line):
                 return print("Unable to check: index is out of bound")
             tasks = open(self.name, "w")
@@ -90,6 +95,14 @@ class Controller:
             return print("Unable to check: no index provided")
         except ValueError:
             return print("Unable to check: index is not a number")
+
+    def read(self):
+        tasks = open(self.name, "r")
+        line = tasks.readlines()
+        tasks.close()
+        return line
+
+
 
 
 screen = Controller('todo.txt')
