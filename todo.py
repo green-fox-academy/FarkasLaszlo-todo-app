@@ -5,7 +5,7 @@ class Controller:
     def __init__(self, name):
         self.name = name
         if len(argv) == 1:
-            self.print_usage()
+            Display.print_help(display)
         elif argv[1] == "-l":
             self.list_tasks()
         elif argv[1] == "-lu":
@@ -21,44 +21,39 @@ class Controller:
         elif argv[1] == "-uc":
             self.complete_task()
         else:
-            print("\nUnsupported argument")
-            self.print_usage()
-
-    def print_usage(self):
-        print("\n|================================|")
-        print("| Command Line Todo Application  |\n|================================|\n \n  Command Line arguments:")
-        print("  -l Lists all the tasks")
-        print("  -lu Lists all the undone tasks")
-        print("  -ld Lists all the done tasks")
-        print("  -a Add a new task")
-        print("  -r Removes a task")
-        print("  -c Completes a task")
-        print("  -uc Uncompletes a task")
+            Display.unsupported_arg(display)
+            Display.print_help(display)
 
     def list_tasks(self):
         try:
             line = self.read()
             if len(line) == 0:
-                print("No todos for today! :)")
+                Display.no_todo(display)
                 return
-            max_length = 0
-            for i in range(len(line)):
-                if len(line[i]) > max_length:
-                    max_length = len(line[i])
-            max_length += 6
-            print("=" * max_length)
+            max_length = self.max_length()
+            Display.print_border(display, max_length)
             for i in range(len(line)):
                 if argv[1] == "-lu" and line[i][0:3] == "[ ]":
-                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                    print("=" * max_length)
+                    Display.list_format(display, i, line)
+                    Display.print_border(display, max_length)
                 elif argv[1] == "-ld" and line[i][0:3] == "[x]":
-                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                    print("=" * max_length)
+                    Display.list_format(display, i, line)
+                    Display.print_border(display, max_length)
                 elif argv[1] == "-l":
-                    print("| " + str(i + 1) + " - " + line[i], sep="", end="")
-                    print("=" * max_length)
+                    Display.list_format(display, i, line)
+                    Display.print_border(display, max_length)
         except TypeError:
             self.read()
+
+    def max_length(self):
+        line = self.read()
+        max_length = 0
+        for i in range(len(line)):
+            if len(line[i]) > max_length:
+                max_length = len(line[i])
+        max_length = max_length + 6
+        return max_length
+
 
     def new_task(self):
         try:
@@ -116,4 +111,32 @@ class Controller:
             tasks.close()
 
 
+class Display:
+
+    def print_help(self):
+        print("\n|================================|")
+        print("| Command Line Todo Application  |\n|================================|\n \n  Command Line arguments:")
+        print("  -l Lists all the tasks")
+        print("  -lu Lists all the undone tasks")
+        print("  -ld Lists all the done tasks")
+        print("  -a Add a new task")
+        print("  -r Removes a task")
+        print("  -c Completes a task")
+        print("  -uc Uncompletes a task")
+
+    def no_todo(self):
+        print("No todos for today! :)")
+
+    def unsupported_arg(self):
+        print("\nUnsupported argument")
+
+    def list_format(self,i,line):
+        print("| " + str(i + 1) + " - " + line[i], sep="", end="")
+
+    def print_border(self,max_length):
+        print("=" * max_length)
+
+
+
+display = Display()
 screen = Controller('todo.txt')
