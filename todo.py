@@ -54,7 +54,6 @@ class Controller:
         max_length = max_length + 6
         return max_length
 
-
     def new_task(self):
         try:
             tasks = open(self.name, "a")
@@ -130,12 +129,11 @@ class Display:
     def unsupported_arg(self):
         print("\nUnsupported argument")
 
-    def list_format(self,i,line):
+    def list_format(self, i, line):
         print("| " + str(i + 1) + " - " + line[i], sep="", end="")
 
-    def print_border(self,max_length):
+    def print_border(self, max_length):
         print("=" * max_length)
-
 
 
 display = Display()
